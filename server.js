@@ -1,45 +1,27 @@
+const bodyParser = require('body-parser')
 const express = require('express')
-const { response } = require('express')
-const res = require('express/lib/response')
 const app = express()
 const path = require('path')
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/', (request, response) => {
-    response.send({message: 'Наш сервис'})
+app.use(bodyParser.json())
+
+const dbConfig = require('./config/database.config')
+const mongoose = require('mongoose')
+
+mongoose.Promise = global.Promise
+
+mongoose.connect(dbConfig.url, {
+    useNewUrlParser: true
+}).then(() => {
+    console.log('Успешное подключение к Базе Данных')
+}).catch((error) => {
+    console.log('Нет соединения с базой данных. Все плохо...', error)
+    process.exit()
 })
 
-app.get('/main', (request, response) => {
-    response.sendFile(`${__dirname}/public/index.html`)
-})
-
-app.get('/articles', (request, response) => {
-    response.sendFile(`${__dirname}/public/index.html`)
-})
-
-app.get('/articles/article/:id', (request, response) => {
-
-    response.sendFile(`${__dirname}/public/index.html`)
-})
-
-app.post('/articles/article/:id', (request, response) => {
-    
-    response.send({message: 'Наш сервис'})
-})
-
-app.put('/articles/article/:id', (request, response) => {
-    response.send({message: 'Наш сервис'})
-})
-
-app.delete('/articles/article/:id', (request, response) => {
-    if(id) {
-        // Удаляем
-    } else {
-        response.send({message: 'Нет ID'})
-    }
-    response.send({message: 'Наш сервис'})
-})
+require('./app/routes/evenetsWorlds.routes')(app);
 
 const PORT = 4040
 
