@@ -1,15 +1,17 @@
 const bodyParser = require('body-parser')
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const path = require('path')
-
-app.use(bodyParser.urlencoded({ extended: true }))
-
-app.use(bodyParser.json())
-
 const dbConfig = require('./config/database.config')
 const mongoose = require('mongoose')
 
+
+//app.use(bodyParser.urlencoded({ extended: true }))
+
+//app.use(bodyParser.json())
+app.use(express.json())
+app.use(cors())
 mongoose.Promise = global.Promise
 
 mongoose.connect(dbConfig.url, {
@@ -21,7 +23,11 @@ mongoose.connect(dbConfig.url, {
     process.exit()
 })
 
+
 require('./app/routes/evenetsWorlds.routes')(app);
+require('./app/routes/users.routes')(app);
+
+
 
 const PORT = 4040
 
