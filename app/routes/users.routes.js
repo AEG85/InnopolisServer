@@ -4,6 +4,6 @@ module.exports = (app) => {
     // Регистрация пользователя
     app.post('/login', users.create)
 
-    // Получить всех пользователей
+    // Получить пользователя по его логину
     app.get('/user', users.findOne)
 }
